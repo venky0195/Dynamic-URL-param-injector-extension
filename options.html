@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>URL Param Injector — Settings</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      padding: 32px;
+      min-height: 100vh;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 28px;
+    }
+
+    /* ---- Params Section ---- */
+    .section {
+      background: #1a1a2e;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .section-desc {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 16px;
+    }
+
+    /* ---- Param Rows ---- */
+    .param-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .param-row input {
+      flex: 1;
+      padding: 8px 12px;
+      background: #12122a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #eee;
+      font-size: 13px;
+      outline: none;
+    }
+    .param-row input:focus { border-color: #4A90D9; }
+    .param-row input::placeholder { color: #555; }
+
+    .btn-remove {
+      background: none;
+      border: 1px solid #555;
+      color: #e74c3c;
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: 0.2s;
+    }
+    .btn-remove:hover { background: #e74c3c22; border-color: #e74c3c; }
+
+    .btn-add {
+      background: none;
+      border: 1px dashed #555;
+      color: #4A90D9;
+      border-radius: 6px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: 0.2s;
+      width: 100%;
+    }
+    .btn-add:hover { background: #4A90D922; border-color: #4A90D9; }
+
+    /* ---- Host Rows ---- */
+    .host-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .host-row input {
+      flex: 1;
+      padding: 8px 12px;
+      background: #12122a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #eee;
+      font-size: 13px;
+      outline: none;
+    }
+    .host-row input:focus { border-color: #4A90D9; }
+    .host-row input::placeholder { color: #555; }
+
+    .host-row select {
+      padding: 8px 10px;
+      background: #12122a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #eee;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+    .host-row select:focus { border-color: #4A90D9; }
+
+    /* ---- Tags ---- */
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 6px;
+      font-weight: 500;
+    }
+    .tag-hash { background: #4A90D922; color: #4A90D9; }
+    .tag-path { background: #2ecc7122; color: #2ecc71; }
+
+    /* ---- Save Button ---- */
+    .btn-save {
+      background: #4A90D9;
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      padding: 12px 28px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: 0.2s;
+      margin-top: 8px;
+    }
+    .btn-save:hover { background: #3a7bc8; }
+    .btn-save:active { transform: scale(0.98); }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #2ecc71;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+
+    .defaults-hint {
+      font-size: 11px;
+      color: #555;
+      margin-top: 12px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>URL Param Injector — Settings</h1>
+    <p class="subtitle">Configure which params to inject and which hosts to target.</p>
+
+    <!-- Params Section -->
+    <div class="section">
+      <div class="section-title">Query Parameters</div>
+      <div class="section-desc">Key-value pairs to append to matching URLs.</div>
+      <div id="params-list"></div>
+      <button class="btn-add" id="add-param">+ Add parameter</button>
+    </div>
+
+    <!-- Hosts Section -->
+    <div class="section">
+      <div class="section-title">Host Rules</div>
+      <div class="section-desc">
+        Define which hosts to match and their routing type.<br>
+        <span class="tag tag-hash">Hash-based</span> for <code>#!/</code> routing (e.g. csnonprod.com)
+        <span class="tag tag-path">Path-based</span> for regular routing (e.g. localhost) — auto-reloads on change.
+      </div>
+      <div id="hosts-list"></div>
+      <button class="btn-add" id="add-host">+ Add host</button>
+      <div class="defaults-hint">Use * as wildcard for subdomains. e.g. *.csnonprod.com</div>
+    </div>
+
+    <button class="btn-save" id="save">Save Settings</button>
+  </div>
+
+  <div class="toast" id="toast">Settings saved!</div>
+
+  <script src="options.js"></script>
+</body>
+</html>
