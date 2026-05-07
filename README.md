@@ -1,3 +1,5 @@
+<img width="2816" height="1536" alt="Gemini_Generated_Image_l2j0iml2j0iml2j0" src="https://github.com/user-attachments/assets/203aebde-6211-401b-9234-8b6ea9e4a7c3" />
+
 # URL Param Injector (Chrome)
 
 A Chrome extension (Manifest V3) that **automatically adds query parameters** to URLs on sites you choose. It supports **hash-based** routing (for SPAs) and **path-based** routing, and can react when you navigate inside single-page apps.
